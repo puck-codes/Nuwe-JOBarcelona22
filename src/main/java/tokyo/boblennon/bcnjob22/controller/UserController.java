@@ -4,6 +4,9 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -19,6 +22,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import tokyo.boblennon.bcnjob22.application.UserApplicationImp;
 import tokyo.boblennon.bcnjob22.core.mappers.dtos.PostUserDto;
+import tokyo.boblennon.bcnjob22.domain.User;
 
 @RestController
 public class UserController {
@@ -33,8 +37,9 @@ public class UserController {
     @PostMapping(path = "/signup")
     public ResponseEntity<?> add(@RequestBody PostUserDto postUserDto) {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/signup").toUriString());
-        this.userApplicationImp.addUser(postUserDto);
-        return ResponseEntity.created(uri).body(getJWTToken(postUserDto));
+        Map<String, String> token = new HashMap<>();
+        token.put("access_token", getJWTToken(this.userApplicationImp.addUser(postUserDto)));
+        return ResponseEntity.created(uri).body(token);
     }
 
     @GetMapping(path = "/users")
@@ -43,15 +48,16 @@ public class UserController {
     }
 
     // This logic is used three times in different places, it should be refactored to a 'Utility' package
-    private String getJWTToken(PostUserDto postUserDto) {
+    private String getJWTToken(User user) {
         Algorithm algorithm = Algorithm.HMAC256("bcn22".getBytes());
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        postUserDto.getRoles().forEach(role -> {
+        user.getRoles().forEach(role -> {
             authorities.add(new SimpleGrantedAuthority(role.getName()));
         });
         String access_token = JWT.create()
-                .withSubject(postUserDto.getUsername())
+                .withSubject(user.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
+                .withClaim("roles", authorities.stream().collect(Collectors.toList()))
                 .sign(algorithm);
         return access_token;
     }

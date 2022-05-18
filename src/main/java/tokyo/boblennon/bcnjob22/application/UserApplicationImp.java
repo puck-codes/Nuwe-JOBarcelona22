@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
 import tokyo.boblennon.bcnjob22.core.ApplicationBase;
 import tokyo.boblennon.bcnjob22.core.mappers.UserMapper;
-import tokyo.boblennon.bcnjob22.core.mappers.dtos.GetUserDto;
 import tokyo.boblennon.bcnjob22.core.mappers.dtos.PostUserDto;
 import tokyo.boblennon.bcnjob22.domain.User;
 import tokyo.boblennon.bcnjob22.domain.UserReadRepository;
@@ -39,7 +38,7 @@ public class UserApplicationImp extends ApplicationBase<User, UUID> implements U
     }
 
     @Override
-    public GetUserDto addUser(PostUserDto postUserDto) {
+    public User addUser(PostUserDto postUserDto) {
 
         User user = this.userMapper.toUser(postUserDto);
         user.setId(UUID.randomUUID());
@@ -52,8 +51,7 @@ public class UserApplicationImp extends ApplicationBase<User, UUID> implements U
 
         this.userWriteRepository.add(user);
         log.info(this.serializeObject(user, "added"));
-
-        return this.userMapper.toGetUserDto(user);
+        return user;
     }
 
     @Override
