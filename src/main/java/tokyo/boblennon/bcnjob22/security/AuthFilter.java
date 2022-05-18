@@ -98,11 +98,4 @@ public class AuthFilter extends UsernamePasswordAuthenticationFilter {
         new ObjectMapper().writeValue(response.getOutputStream(), tokens);
         }
 
-@Override
-public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-                throws IOException, ServletException {
-        // TODO Auto-generated method stub
-        super.doFilter(request, response, chain);
-}
-
 }
