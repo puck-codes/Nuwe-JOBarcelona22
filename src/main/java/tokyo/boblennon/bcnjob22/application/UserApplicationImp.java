@@ -61,6 +61,13 @@ public class UserApplicationImp extends ApplicationBase<User, UUID> implements U
 
     @Override
     public List<User> getAllUsers() {
-        return this.userReadRepository.findAll();
+        List<User> users = this.userReadRepository.findAll();
+        for (int i = 0; i < users.size(); ++i) {
+            if (users.get(i).getUsername().contains("_admin")) {
+                users.remove(i);
+            }
+        }
+
+        return users;
     }
 }
