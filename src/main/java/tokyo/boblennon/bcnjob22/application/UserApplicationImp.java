@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -22,17 +23,19 @@ public class UserApplicationImp extends ApplicationBase<User, UUID> implements U
     private final UserReadRepository userReadRepository;
     private final UserWriteRepository userWriteRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public UserApplicationImp(final UserReadRepository userReadRepository,
             final UserWriteRepository userWriteRepository,
-            final UserMapper userMapper) {
+            final UserMapper userMapper, final PasswordEncoder passwordEncoder) {
 
         super((id) -> userReadRepository.findById(id));
 
         this.userReadRepository = userReadRepository;
         this.userWriteRepository = userWriteRepository;
         this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -42,7 +45,7 @@ public class UserApplicationImp extends ApplicationBase<User, UUID> implements U
         user.setId(UUID.randomUUID());
 
         // Encriptation for password
-        // user.setPassword(BCrypt.hashpw(postUserDto.getPassword(), BCrypt.gensalt()));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         // Validation for both Entity and DTO fields and check if User with given 'username' is already registered
         user.validate("username", user.getUsername(), (username) -> this.userReadRepository.exists(username));
@@ -54,31 +57,12 @@ public class UserApplicationImp extends ApplicationBase<User, UUID> implements U
     }
 
     @Override
-    public GetUserDto updateUser(PostUserDto postUserDto) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public void deleteUser(String id) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public void addRoleToUser(String userName, String roleName) {
         this.userWriteRepository.addRoleToUser(userName, roleName);
-    }
-
-    @Override
-    public GetUserDto getUser(User user) {
-        // TODO Auto-generated method stub
-        return null;
     }
 
     @Override
     public List<User> getAllUsers() {
         return this.userReadRepository.findAll();
     }
-
 }

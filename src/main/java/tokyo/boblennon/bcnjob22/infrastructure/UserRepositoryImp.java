@@ -59,6 +59,7 @@ public class UserRepositoryImp implements UserReadRepository, UserWriteRepositor
         User user = this.userMongoRepository.findByUsername(userName);
         Role role = this.roleMongoRepository.findByName(roleName);
         user.getRoles().add(role);
+        this.update(user);
     }
 
     @Override
