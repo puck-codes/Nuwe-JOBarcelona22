@@ -14,5 +14,8 @@ public interface UserMongoRepository extends MongoRepository<User, UUID> {
     @ExistsQuery("{ 'username': ?0}")
     boolean exists(String username);
 
+    @ExistsQuery("{ 'email': ?0}")
+    boolean existsByEmail(String email);
+
     User findByUsername(String username);
 }

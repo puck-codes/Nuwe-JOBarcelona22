@@ -76,8 +76,14 @@ public class UserRepositoryImp implements UserReadRepository, UserWriteRepositor
 
     @Override
     public boolean exists(String username) {
-        log.info("Check if User: '{}' exists in the database", username);
+        log.info("Check if User with username: '{}' exists in the database", username);
         return this.userMongoRepository.exists(username);
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        log.info("Check if User with email: '{}' exists in the database", email);
+        return this.userMongoRepository.existsByEmail(email);
     }
 
     @Override

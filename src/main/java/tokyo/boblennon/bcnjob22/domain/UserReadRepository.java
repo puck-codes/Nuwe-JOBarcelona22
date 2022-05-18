@@ -10,4 +10,6 @@ import tokyo.boblennon.bcnjob22.core.FindById;
 public interface UserReadRepository extends FindById<User, UUID>, ExistsByField {
     public Optional<User> findById(UUID id);
     public List<User> findAll();
+
+    public boolean existsByEmail(String email);
 }

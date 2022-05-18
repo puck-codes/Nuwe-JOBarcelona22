@@ -40,7 +40,7 @@ public @Getter @Setter @NoArgsConstructor abstract class EntityBase {
         this.validate();
         if (existsByField.exists(value)) {
             BadRequestException badRequestException = new BadRequestException();
-            badRequestException.addException(key, String.format("Value %s for key %s is duplicated.", value, key));
+            badRequestException.addException(key, String.format("Value %s for key %s is already in the database.", value, key));
             throw badRequestException;
         }
     }

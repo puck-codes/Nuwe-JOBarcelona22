@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
 import tokyo.boblennon.bcnjob22.core.ApplicationBase;
+import tokyo.boblennon.bcnjob22.core.execptions.BadRequestException;
 import tokyo.boblennon.bcnjob22.core.mappers.UserMapper;
 import tokyo.boblennon.bcnjob22.core.mappers.dtos.PostUserDto;
 import tokyo.boblennon.bcnjob22.domain.User;
@@ -48,6 +49,13 @@ public class UserApplicationImp extends ApplicationBase<User, UUID> implements U
 
         // Validation for both Entity and DTO fields and check if User with given 'username' is already registered
         user.validate("username", user.getUsername(), (username) -> this.userReadRepository.exists(username));
+
+        if (this.userReadRepository.existsByEmail(user.getEmail())) {
+            BadRequestException badRequestException = new BadRequestException();
+            badRequestException.addException("email",
+                    String.format("Value %s for key %s is already in the database.", user.getEmail(), "email"));
+            throw badRequestException;
+        }
 
         this.userWriteRepository.add(user);
         log.info(this.serializeObject(user, "added"));
