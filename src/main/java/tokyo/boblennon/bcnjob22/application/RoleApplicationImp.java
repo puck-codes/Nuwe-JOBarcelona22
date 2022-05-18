@@ -27,7 +27,7 @@ public class RoleApplicationImp extends ApplicationBase<Role, UUID> implements R
 
     @Override
     public void addRole(Role role) {
-        role.setId(UUID.randomUUID());
+        role.setId(UUID.randomUUID().toString());
 
         role.validate("name", role.getName(), (name) -> this.roleReadRepository.exists(name));
 

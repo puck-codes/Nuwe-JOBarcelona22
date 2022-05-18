@@ -42,7 +42,7 @@ public class UserApplicationImp extends ApplicationBase<User, UUID> implements U
     public User addUser(PostUserDto postUserDto) {
 
         User user = this.userMapper.toUser(postUserDto);
-        user.setId(UUID.randomUUID());
+        user.setId(UUID.randomUUID().toString());
 
         // Encriptation for password
         user.setPassword(passwordEncoder.encode(user.getPassword()));

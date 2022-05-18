@@ -1,7 +1,6 @@
 package tokyo.boblennon.bcnjob22.core;
 
 import java.util.Set;
-import java.util.UUID;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -18,7 +17,7 @@ import tokyo.boblennon.bcnjob22.core.execptions.BadRequestException;
 public @Getter @Setter @NoArgsConstructor abstract class EntityBase {
     
     @Id
-    public UUID id;
+    public String id;
 
     // Second Field validation, this one is for Domain-Entity's feilds
     public void validate() {
