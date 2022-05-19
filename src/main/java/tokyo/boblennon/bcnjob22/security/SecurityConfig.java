@@ -41,10 +41,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         // Path authorization
-        http.authorizeRequests().antMatchers(POST,"/login").permitAll();
-        http.authorizeRequests().antMatchers(POST,"/signup").permitAll();
-        http.authorizeRequests().antMatchers(GET, "/users").hasAnyAuthority("ROLE_ADMIN");
-        http.authorizeRequests().anyRequest().authenticated();
+        http.authorizeRequests().antMatchers("/api-docs/**", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                .and().authorizeRequests().antMatchers(POST, "/login").permitAll()
+                .and().authorizeRequests().antMatchers(POST, "/signup").permitAll()
+                .and().authorizeRequests().antMatchers(GET, "/users").hasAnyAuthority("ROLE_ADMIN")
+                .and().authorizeRequests().anyRequest().authenticated();
 
         http.addFilter(new AuthFilter(authenticationManagerBean()));
         http.addFilterBefore(new JwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

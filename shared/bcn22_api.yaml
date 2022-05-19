@@ -1,0 +1,97 @@
+openapi: 3.0.1
+info:
+  title: JOBarcelona '22
+  description: REST API for User management
+  version: '1.0'
+servers:
+  - url: 'http://localhost:3030'
+    description: Generated server url
+paths:
+  /signup:
+    post:
+      tags:
+        - user-controller
+      summary: Create a new user in the database
+      operationId: add
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostUserDto'
+        required: true
+      responses:
+        '201':
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid input
+      security:
+        - bcn22: []
+  /users:
+    get:
+      tags:
+        - user-controller
+      summary: >-
+        Retrieves all existing users in the database except for the
+        administrator users. 
+      operationId: getAll
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '403':
+          description: Access Denied
+      security:
+        - bcn22: []
+components:
+  schemas:
+    PostUserDto:
+      required:
+        - username
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
+    Role:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+    User:
+      required:
+        - username
+      type: object
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
+  securitySchemes:
+    bcn22:
+      type: http
+      in: header
+      scheme: Bearer

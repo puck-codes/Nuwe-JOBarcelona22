@@ -9,6 +9,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import lombok.extern.slf4j.Slf4j;
 import tokyo.boblennon.bcnjob22.application.RoleApplicationImp;
 import tokyo.boblennon.bcnjob22.application.UserApplicationImp;
@@ -17,6 +22,8 @@ import tokyo.boblennon.bcnjob22.core.mappers.dtos.PostUserDto;
 import tokyo.boblennon.bcnjob22.domain.Role;
 
 @SpringBootApplication
+@OpenAPIDefinition(info = @Info(title = "JOBarcelona '22", version = "1.0", description = "REST API for User management"))
+@SecurityScheme(name = "bcn22", scheme = "Bearer", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
 @Slf4j
 public class BcnJob22Application {
 
